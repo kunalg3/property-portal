@@ -37,9 +37,9 @@ const Dashboard = () => {
   };
 
   const handleAddProperty = async () => {
-    console.log(newProperty)
+    console.log(newProperty);
     try {
-      const response= await axios.post('/property/', newProperty, {
+      const response = await axios.post('/property/', newProperty, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json',
@@ -55,10 +55,25 @@ const Dashboard = () => {
         price: '',
         propertyType: '',
       });
-    //   setImage('');
-    console.log('Property added:', response.data);
+      // setImage('');
+      console.log('Property added:', response.data);
     } catch (error) {
       console.error('Error adding property:', error);
+    }
+  };
+
+  const handleDeleteProperty = async (id) => {
+    try {
+      await axios.delete(`/property/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      // Refresh the list of properties after deletion
+      fetchUserProperties();
+      console.log('Property deleted:', id);
+    } catch (error) {
+      console.error('Error deleting property:', error);
     }
   };
 
@@ -177,6 +192,13 @@ const Dashboard = () => {
                 <Typography variant="body2" color="text.secondary">
                   <strong>Type:</strong> {property.propertyType}
                 </Typography>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => handleDeleteProperty(property._id)}
+                >
+                  Delete
+                </Button>
               </CardContent>
             </Card>
           </Grid>
