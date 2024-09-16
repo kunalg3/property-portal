@@ -42,8 +42,8 @@ const HomePage = () => {
 
   const fetchLocations = [
     { value: '', label: "Select Location" },
-    { value: "New York", label: "New York" },
-    { value: "Los Angeles", label: "Los Angeles" },
+    { value: "Aligarh", label: "Aligarh" },
+    { value: "Delhi", label: "Delhi" },
     // Add more locations here...
   ];
 

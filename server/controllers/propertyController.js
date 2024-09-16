@@ -10,8 +10,8 @@ exports.getProperties = async (req, res) => {
 };
 
 exports.addProperty = async (req, res) => {
-  try {
     console.log(req.user)
+  try {
     const newProperty = new Property({ ...req.body, owner: req.user.userId });
     await newProperty.save();
     res.status(201).json(newProperty);
