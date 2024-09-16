@@ -10,7 +10,7 @@ const PORT=process.env.PORT||8000
 
 app.use(express.json())
 app.use(cors({
-    origin:['https://property-portal-app.vercel.app','http://localhost:3000'],
+    origin:['https://property-portal-app.vercel.app','http://localhost:3000'],//url of client
     credentials:true
 }))
 
