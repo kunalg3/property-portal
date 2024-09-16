@@ -5,14 +5,8 @@ const jwt = require('jsonwebtoken');
 //register endpoint
 const register=async(req,res)=>{
     try {
-        const { name, email, password, confirm_password } = req.body;
+        const { email, password} = req.body;
 
-        //check for name
-        if(!name){
-            return res.json({
-                "error":"Name is required"
-            })
-        }
         //check email
         if(!email){
             return res.json({error:'Email is required'})
@@ -23,12 +17,6 @@ const register=async(req,res)=>{
                 "error":"Password is required and should be atleast 6 character long"
             })
         }
-        //check if password is confirmed
-        if(confirm_password!==password){
-            return res.json({
-                error:'Confirm Password does not match with password'
-            })
-        }
         //check if email already exist
         const exist= await User.findOne({email})
         if(exist){
@@ -37,7 +25,7 @@ const register=async(req,res)=>{
             })
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ name, email, password: hashedPassword });
+        const user = new User({ email, password: hashedPassword });
         await user.save();
         return res.json({ message: 'User registered successfully' });
         } catch (error) {

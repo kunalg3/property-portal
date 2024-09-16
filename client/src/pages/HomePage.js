@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Typography, MenuItem, Select, Slider, Box, Card, CardContent, CardMedia, TextField } from '@mui/material';
+import { Container, Typography, MenuItem, Select, Slider, Box, Card, CardContent, CardMedia, TextField, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
   const [properties, setProperties] = useState([]);
@@ -8,6 +9,8 @@ const HomePage = () => {
   const [filters, setFilters] = useState({ location: '', price: [0, 10000], propertyType: '', availableFrom: '' });
   const [locations, setLocations] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProperties();
@@ -116,6 +119,16 @@ const HomePage = () => {
           onChange={handleFilterChange}
           InputLabelProps={{ shrink: true }}
         />
+      </Box>
+
+      {/* Buttons for navigation */}
+      <Box display="flex" justifyContent="center" mb={4} gap={2}>
+        <Button variant="contained" color="primary" onClick={() => navigate('/login')}>
+          Login
+        </Button>
+        <Button variant="contained" color="secondary" onClick={() => navigate('/signup')}>
+          Sign Up
+        </Button>
       </Box>
 
       <Box display="flex" flexWrap="wrap" gap={2} justifyContent="center">

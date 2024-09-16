@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Typography, Box, TextField, Button, Paper, Alert } from '@mui/material';
+import { toast } from 'react-hot-toast'; // Importing react-hot-toast
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,11 +16,17 @@ const Login = () => {
     try {
       const response = await axios.post('/auth/login', { email, password });
       localStorage.setItem('token', response.data.token);
+      toast.success('Login successful! Redirecting to dashboard...');
       navigate('/dashboard');
     } catch (error) {
       console.error('Error logging in:', error);
       setError('Invalid email or password');
+      toast.error('Login failed! Invalid email or password.');
     }
+  };
+
+  const handleSignupRedirect = () => {
+    navigate('/signup');
   };
 
   return (
@@ -71,6 +78,19 @@ const Login = () => {
               </Button>
             </Box>
           </form>
+          <Box mt={2} textAlign="center">
+            <Typography variant="body2">
+              Don't have an account?
+            </Typography>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleSignupRedirect}
+              fullWidth
+            >
+              Signup
+            </Button>
+          </Box>
         </Paper>
       </Box>
     </Container>

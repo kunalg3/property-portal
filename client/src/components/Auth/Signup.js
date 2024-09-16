@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Typography, Box, TextField, Button, Paper, Alert } from '@mui/material';
+import { toast } from 'react-hot-toast'; // Importing react-hot-toast
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -13,12 +14,23 @@ const Signup = () => {
     event.preventDefault();
     setError(''); // Clear any previous errors
     try {
-      await axios.post('/api/auth/signup', { email, password });
-      navigate('/login');
+        const {data}=  await axios.post('/auth/signup', { email, password });
+        if(data.error){
+            toast.error(data.error)
+        }
+        else{
+            toast.success("Account registered successfully")
+            navigate('/login')
+        }
     } catch (error) {
       console.error('Error signing up:', error);
       setError('Failed to sign up. Please try again.');
+      toast.error('Signup failed! Please try again.');
     }
+  };
+
+  const handleLoginRedirect = () => {
+    navigate('/login');
   };
 
   return (
@@ -70,6 +82,19 @@ const Signup = () => {
               </Button>
             </Box>
           </form>
+          <Box mt={2} textAlign="center">
+            <Typography variant="body2">
+              Already have an account?
+            </Typography>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleLoginRedirect}
+              fullWidth
+            >
+              Login
+            </Button>
+          </Box>
         </Paper>
       </Box>
     </Container>

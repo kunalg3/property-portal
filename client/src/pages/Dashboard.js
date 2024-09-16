@@ -3,6 +3,7 @@ import axios from 'axios';
 import {
   Container, Typography, Box, Button, TextField, Grid, Card, CardContent, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Alert
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const [properties, setProperties] = useState([]);
@@ -18,6 +19,7 @@ const Dashboard = () => {
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
     fetchUserProperties();
@@ -108,11 +110,23 @@ const Dashboard = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login'); // Redirect to login page
+  };
+
   return (
     <Container>
       <Typography variant="h3" align="center" gutterBottom>
         Dashboard
       </Typography>
+
+      {/* Logout Button */}
+      <Box textAlign="right" mb={2}>
+        <Button variant="outlined" color="secondary" onClick={handleLogout}>
+          Logout
+        </Button>
+      </Box>
 
       <Box mb={4}>
         <Typography variant="h5" gutterBottom>
