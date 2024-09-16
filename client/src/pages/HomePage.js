@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Typography, MenuItem, Select, Slider, Box, Card, CardContent, CardMedia, InputLabel } from '@mui/material';
+import { Container, Typography, MenuItem, Select, Slider, Box, Card, CardContent, CardMedia } from '@mui/material';
 
 const HomePage = () => {
   const [properties, setProperties] = useState([]);
+  const [filteredProperties, setFilteredProperties] = useState([]);
   const [filters, setFilters] = useState({ location: '', price: [0, 10000], propertyType: '' });
 
   useEffect(() => {
     fetchProperties();
   }, []);
+
+  useEffect(() => {
+    applyFilters();
+  }, [filters, properties]);
 
   const fetchProperties = async () => {
     try {
@@ -19,16 +24,33 @@ const HomePage = () => {
     }
   };
 
+  const applyFilters = () => {
+    let filtered = properties;
+
+    if (filters.location) {
+      filtered = filtered.filter(property => property.location === filters.location);
+    }
+
+    if (filters.propertyType) {
+      filtered = filtered.filter(property => property.propertyType === filters.propertyType);
+    }
+
+    filtered = filtered.filter(property => property.price >= filters.price[0] && property.price <= filters.price[1]);
+
+    setFilteredProperties(filtered);
+  };
+
   const fetchLocations = [
-    { value: "none", label: "Select Location" },
+    { value: '', label: "Select Location" },
     { value: "New York", label: "New York" },
     { value: "Los Angeles", label: "Los Angeles" },
     // Add more locations here...
   ];
 
-  const fetchPropertytype=[
-    { value:'Apartment', label:'Apartment'},
-    { value:'House', label:'House'}
+  const fetchPropertytype = [
+    { value: '', label: "Select Property Type" },
+    { value: 'Apartment', label: 'Apartment' },
+    { value: 'House', label: 'House' }
   ];
 
   const handleFilterChange = (event) => {
@@ -43,18 +65,17 @@ const HomePage = () => {
       </Typography>
 
       <Box display="flex" justifyContent="center" mb={4} gap={2}>
-      {/* <InputLabel id="demo-simple-select-label">Select</InputLabel> */}
         <Select
           name="location"
           value={filters.location}
           onChange={handleFilterChange}
           variant="outlined"
         >
-        {fetchLocations.map((location) => (
-        <MenuItem key={location.value} value={location.value}>
-        {location.label}
-        </MenuItem>
-        ))}
+          {fetchLocations.map((location) => (
+            <MenuItem key={location.value} value={location.value}>
+              {location.label}
+            </MenuItem>
+          ))}
         </Select>
 
         <Slider
@@ -73,16 +94,16 @@ const HomePage = () => {
           onChange={handleFilterChange}
           variant="outlined"
         >
-        {fetchPropertytype.map((type) => (
-        <MenuItem key={type.value} value={type.value}>
-        {type.label}
-        </MenuItem>
-        ))}
+          {fetchPropertytype.map((type) => (
+            <MenuItem key={type.value} value={type.value}>
+              {type.label}
+            </MenuItem>
+          ))}
         </Select>
       </Box>
 
       <Box display="flex" flexWrap="wrap" gap={2} justifyContent="center">
-        {properties.map(property => (
+        {filteredProperties.map(property => (
           <Card key={property._id} sx={{ maxWidth: 345 }}>
             <CardMedia
               component="img"
