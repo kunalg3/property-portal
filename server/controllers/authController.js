@@ -70,7 +70,7 @@ const login=async(req,res)=>{
         if (!passwordMatch) {
         return res.json({ error: 'Wrong Password' });
         }
-        const token = jwt.sign({ userId: user._id }, 'your-secret-key', {expiresIn: '1h'});
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
         
         return res.json({ token, user });
         // return res.cookie('token',token).json(user)
