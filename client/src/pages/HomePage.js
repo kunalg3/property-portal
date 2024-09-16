@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Typography, MenuItem, Select, Slider, Box, Card, CardContent, CardMedia } from '@mui/material';
+import { Container, Typography, MenuItem, Select, Slider, Box, Card, CardContent, CardMedia, TextField } from '@mui/material';
 
 const HomePage = () => {
   const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
-  const [filters, setFilters] = useState({ location: '', price: [0, 10000], propertyType: '' });
+  const [filters, setFilters] = useState({ location: '', price: [0, 10000], propertyType: '', availableFrom: '' });
   const [locations, setLocations] = useState([]);
   const [propertyTypes, setPropertyTypes] = useState([]);
 
@@ -45,7 +45,14 @@ const HomePage = () => {
       filtered = filtered.filter(property => property.propertyType === filters.propertyType);
     }
 
+    // Price filtering
     filtered = filtered.filter(property => property.price >= filters.price[0] && property.price <= filters.price[1]);
+
+    // Date filtering based on "Available From"
+    if (filters.availableFrom) {
+      const selectedDate = new Date(filters.availableFrom);
+      filtered = filtered.filter(property => new Date(property.availableFrom) >= selectedDate);
+    }
 
     setFilteredProperties(filtered);
   };
@@ -99,6 +106,16 @@ const HomePage = () => {
             </MenuItem>
           ))}
         </Select>
+
+        {/* Native date input field for filtering by "Available From" */}
+        <TextField
+          name="availableFrom"
+          label="Available From"
+          type="date"
+          value={filters.availableFrom}
+          onChange={handleFilterChange}
+          InputLabelProps={{ shrink: true }}
+        />
       </Box>
 
       <Box display="flex" flexWrap="wrap" gap={2} justifyContent="center">
