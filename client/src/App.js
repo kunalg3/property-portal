@@ -12,7 +12,7 @@ import ProtectedRoutes from './services/ProtectedRoutes';
 // Set base URL based on environment
 const baseURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:8000'
-  : '';
+  : 'https://property-portal-ud1k.onrender.com';
 
 axios.defaults.baseURL= baseURL;
 axios.defaults.withCredentials=true;
