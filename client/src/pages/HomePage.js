@@ -6,6 +6,8 @@ const HomePage = () => {
   const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [filters, setFilters] = useState({ location: '', price: [0, 10000], propertyType: '' });
+  const [locations, setLocations] = useState([]);
+  const [propertyTypes, setPropertyTypes] = useState([]);
 
   useEffect(() => {
     fetchProperties();
@@ -18,7 +20,15 @@ const HomePage = () => {
   const fetchProperties = async () => {
     try {
       const response = await axios.get('/property/');
-      setProperties(response.data);
+      const data = response.data;
+      setProperties(data);
+
+      // Extract unique locations and property types
+      const uniqueLocations = [...new Set(data.map(property => property.location))];
+      const uniquePropertyTypes = [...new Set(data.map(property => property.propertyType))];
+
+      setLocations(uniqueLocations);
+      setPropertyTypes(uniquePropertyTypes);
     } catch (error) {
       console.error('Error fetching properties:', error);
     }
@@ -40,19 +50,6 @@ const HomePage = () => {
     setFilteredProperties(filtered);
   };
 
-  const fetchLocations = [
-    { value: '', label: "Select Location" },
-    { value: "Aligarh", label: "Aligarh" },
-    { value: "Delhi", label: "Delhi" },
-    // Add more locations here...
-  ];
-
-  const fetchPropertytype = [
-    { value: '', label: "Select Property Type" },
-    { value: 'Apartment', label: 'Apartment' },
-    { value: 'House', label: 'House' }
-  ];
-
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     setFilters({ ...filters, [name]: value });
@@ -71,9 +68,10 @@ const HomePage = () => {
           onChange={handleFilterChange}
           variant="outlined"
         >
-          {fetchLocations.map((location) => (
-            <MenuItem key={location.value} value={location.value}>
-              {location.label}
+          <MenuItem value="">Select Location</MenuItem>
+          {locations.map(location => (
+            <MenuItem key={location} value={location}>
+              {location}
             </MenuItem>
           ))}
         </Select>
@@ -94,9 +92,10 @@ const HomePage = () => {
           onChange={handleFilterChange}
           variant="outlined"
         >
-          {fetchPropertytype.map((type) => (
-            <MenuItem key={type.value} value={type.value}>
-              {type.label}
+          <MenuItem value="">Select Property Type</MenuItem>
+          {propertyTypes.map(type => (
+            <MenuItem key={type} value={type}>
+              {type}
             </MenuItem>
           ))}
         </Select>
@@ -108,7 +107,7 @@ const HomePage = () => {
             <CardMedia
               component="img"
               height="140"
-              image={property.imageUrl || 'default-image.jpg'}
+              image={property.imageUrl || 'https://t4.ftcdn.net/jpg/04/36/23/41/360_F_436234154_GyTM8dZBFljIAL6p8tkdEfFc96J7KOKR.jpg'}
               alt={property.title}
             />
             <CardContent>
